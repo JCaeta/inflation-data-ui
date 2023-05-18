@@ -1,0 +1,15 @@
+{
+  "/_app": "pages/_app.js",
+  "/_document": "pages/_document.js",
+  "/blog": "pages/blog.html",
+  "/blog/first": "pages/blog/first.html",
+  "/api/http_requests": "pages/api/http_requests.js",
+  "/blog/admin": "pages/blog/admin.html",
+  "/product/[productId]": "pages/product/[productId].html",
+  "/product/[productId]/review/[reviewId]": "pages/product/[productId]/review/[reviewId].html",
+  "/": "pages/index.html",
+  "/product": "pages/product.html",
+  "/product/sweater": "pages/product/sweater.html",
+  "/_error": "pages/_error.js",
+  "/404": "pages/404.html"
+}
