@@ -1,9 +1,9 @@
 import styles from './DataSectionDesktop.module.scss';
 import React, {useState, forwardRef, useImperativeHandle, useRef} from 'react';
 import PropTypes from 'prop-types';
-import { DataInput0 } from '../../../Common/DataInput0/DataInput0';
+import { DataInput0 } from '../../../Common/Inputs/DataInput0/DataInput0';
 import { Table0 } from '../../../Common/Table0/Table0';
-import { DataInput1 } from '../../../Common/DataInput1/DataInput1';
+import { DataInput1 } from '../../../Common/Inputs/DataInput1/DataInput1';
 import {Container, Grid} from '@mui/material';
 import {Dialog, DialogContent, DialogTitle} from '@mui/material';
 import { UpdateInflationDesktop } from '../UpdateInflation/UpdateInflationDesktop';

@@ -1,25 +1,49 @@
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
-// import styles from '@/styles/Home.module.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react';
-// import { MainDesktop } from '@/components/Desktop/Main/MainDesktop';
-// import { MainMobile } from '@/components/Mobile/Main/MainMobile';
 import {isMobile} from 'react-device-detect';
-import Admin from './blog/admin'
+import Admin from './admin'
+import Public from './public';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-    
-    return (<>
-         <main>
-             <div>
-                <Admin/>
-                {/* {isMobile? <MainMobile/> : <MainDesktop />} */}
-             </div>
-         </main>
-    </>);
-}
+    const router = useRouter();
+  
+    useEffect(() => {
+      if (router.asPath === '/admin') {
+        router.replace('/admin');
+      } 
 
+
+    }, []);
+  
+    if (router.asPath === '/admin') {
+      return <Admin />;
+    }
+
+    return (<>
+        <main>
+            <div>
+                <Public />
+            </div>
+        </main>
+    </>);
+
+
+
+//   return (<>
+//         <Head>
+//             <title>Home</title>
+//         </Head>
+//         <main>
+//             {router.asPath === '/' && (
+//             <div>
+//                 <Public />
+//             </div>
+//             )}
+//         </main>
+//     </>);
+}

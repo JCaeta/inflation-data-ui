@@ -25,9 +25,13 @@ module.exports = import("axios");;
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "changeAdminPasswordRequest": () => (/* binding */ changeAdminPasswordRequest),
+/* harmony export */   "changeAdminUsernameRequest": () => (/* binding */ changeAdminUsernameRequest),
 /* harmony export */   "createInflationRequest": () => (/* binding */ createInflationRequest),
 /* harmony export */   "deleteInflationRequest": () => (/* binding */ deleteInflationRequest),
+/* harmony export */   "getChartsDataRequest": () => (/* binding */ getChartsDataRequest),
 /* harmony export */   "readInflationRequest": () => (/* binding */ readInflationRequest),
+/* harmony export */   "signInAdminRequest": () => (/* binding */ signInAdminRequest),
 /* harmony export */   "updateInflationRequest": () => (/* binding */ updateInflationRequest)
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9648);
@@ -38,12 +42,7 @@ axios__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (awa
 
 
 const url = "https://localhost:7173";
-/**
-    id: message
-    1: Succeeded
-    -1: Request failed to complete
-    -2: Communication with server failed
- */ function buildResponse(result) {
+function buildResponseInflation(result) {
     if (result?.data?.message) {
         if (Array.isArray(result?.data?.inflationList)) {
             // Convert date strings to Date objects
@@ -54,13 +53,15 @@ const url = "https://localhost:7173";
                 }));
             const response = {
                 message: result.data.message,
-                inflationList: inflationList
+                inflationList: inflationList,
+                token: result.data.token
             };
             return response;
         } else {
             const response = {
                 message: result.data.message,
-                inflationList: []
+                inflationList: [],
+                token: result.data.token
             };
             return response;
         }
@@ -70,42 +71,90 @@ const url = "https://localhost:7173";
                 id: -2,
                 message: "Communication with server failed"
             },
-            inflationList: []
+            inflationList: [],
+            token: result.data.token
+        };
+        return response;
+    }
+}
+function buildResponseCharts(result) {
+    if (result?.data?.message) {
+        const response = {
+            message: result.data.message,
+            barChartData: result.data.data.barChartData,
+            lineChartData: result.data.data.lineChartData.data
+        };
+        return response;
+    } else {
+        const response = {
+            message: {
+                id: -2,
+                message: "Communication with server failed"
+            },
+            barChartData: null,
+            lineChartData: null
+        };
+        return response;
+    }
+}
+function buildResponseAdmin(result) {
+    if (result?.data?.message) {
+        const response = {
+            message: result.data.message,
+            token: result.data.token
+        };
+        return response;
+    } else {
+        const response = {
+            message: {
+                id: -2,
+                message: "Communication with server failed"
+            },
+            token: null
         };
         return response;
     }
 }
 async function createInflationRequest(request) {
     const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Inflation/create", request);
-    //The option { httpsAgent: new https.Agent({ rejectUnauthorized: false }) } used only for testing purposes. It disables the SSL certificate security
-    return buildResponse(result);
+    return buildResponseInflation(result);
 }
 async function readInflationRequest(request) {
-    console.log("readInflation");
     const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Inflation/read", request);
-    return buildResponse(result);
+    return buildResponseInflation(result);
 }
 async function updateInflationRequest(request) {
     const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].put(url + "/Inflation/update", request);
-    return buildResponse(result);
+    return buildResponseInflation(result);
 }
 async function deleteInflationRequest(request) {
-    console.log("Request postInflation");
     const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](url + "/Inflation/delete/", {
         data: request
     });
-    return buildResponse(result);
-// const response = await axios.post<any>(url + '/inflation/post', inflation, { httpsAgent: new https.Agent({ rejectUnauthorized: false }) });
-// The option { httpsAgent: new https.Agent({ rejectUnauthorized: false }) } used only for testing purposes. It disables the SSL certificate security
-// console.log("response: ", response)
-// return response;
+    return buildResponseInflation(result);
+}
+async function getChartsDataRequest(request) {
+    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Charts/get-data", request);
+    return buildResponseCharts(result);
+}
+async function signInAdminRequest(request) {
+    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Admin/sign-in", request);
+    return buildResponseAdmin(result);
+}
+async function changeAdminPasswordRequest(request) {
+    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Admin/change-password", request);
+    return buildResponseAdmin(result);
+}
+async function changeAdminUsernameRequest(request) {
+    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Admin/change-username", request);
+    return buildResponseAdmin(result);
 } /**
 const onAction = () => {
 
 }
-
-console.log(": ", )
 console.log("")
+console.log(": ", )
+
  */ 
 
 __webpack_async_result__();

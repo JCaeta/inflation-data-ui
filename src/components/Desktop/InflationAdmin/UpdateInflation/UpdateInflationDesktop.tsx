@@ -1,7 +1,7 @@
 import styles from './UpdateInflationDesktop.module.scss';
 import React, {useState, useEffect, forwardRef, useImperativeHandle, useRef} from 'react';
 import PropTypes from 'prop-types';
-import { DataInput2 } from '../../../Common/DataInput2/DataInput2';
+import { DataInput2 } from '../../../Common/Inputs/DataInput2/DataInput2';
 import {Button, Grid} from '@mui/material';
 import { MessageBox } from '../../../Common/MessageBox/MessageBox';
 
