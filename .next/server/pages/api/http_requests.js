@@ -41,7 +41,7 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([axio
 axios__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 
 
-const url = "https://localhost:7173";
+const url = "https://inflation-data-server.up.railway.app";
 function buildResponseInflation(result) {
     if (result?.data?.message) {
         if (Array.isArray(result?.data?.inflationList)) {
@@ -116,38 +116,70 @@ function buildResponseAdmin(result) {
     }
 }
 async function createInflationRequest(request) {
-    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Inflation/create", request);
-    return buildResponseInflation(result);
+    try {
+        const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Inflation/create", request);
+        return buildResponseInflation(result);
+    } catch  {
+        return buildResponseInflation(null);
+    }
 }
 async function readInflationRequest(request) {
-    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Inflation/read", request);
-    return buildResponseInflation(result);
+    try {
+        const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Inflation/read", request);
+        return buildResponseInflation(result);
+    } catch  {
+        return buildResponseInflation(null);
+    }
 }
 async function updateInflationRequest(request) {
-    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].put(url + "/Inflation/update", request);
-    return buildResponseInflation(result);
+    try {
+        const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].put(url + "/Inflation/update", request);
+        return buildResponseInflation(result);
+    } catch  {
+        return buildResponseInflation(null);
+    }
 }
 async function deleteInflationRequest(request) {
-    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](url + "/Inflation/delete/", {
-        data: request
-    });
-    return buildResponseInflation(result);
+    try {
+        const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"]["delete"](url + "/Inflation/delete/", {
+            data: request
+        });
+        return buildResponseInflation(result);
+    } catch  {
+        return buildResponseInflation(null);
+    }
 }
 async function getChartsDataRequest(request) {
-    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Charts/get-data", request);
-    return buildResponseCharts(result);
+    try {
+        const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Charts/get-data", request);
+        return buildResponseCharts(result);
+    } catch  {
+        return buildResponseCharts(null);
+    }
 }
 async function signInAdminRequest(request) {
-    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Admin/sign-in", request);
-    return buildResponseAdmin(result);
+    try {
+        const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Admin/sign-in", request);
+        return buildResponseAdmin(result);
+    } catch  {
+        return buildResponseAdmin(null);
+    }
 }
 async function changeAdminPasswordRequest(request) {
-    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Admin/change-password", request);
-    return buildResponseAdmin(result);
+    try {
+        const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Admin/change-password", request);
+        return buildResponseAdmin(result);
+    } catch  {
+        return buildResponseAdmin(null);
+    }
 }
 async function changeAdminUsernameRequest(request) {
-    const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Admin/change-username", request);
-    return buildResponseAdmin(result);
+    try {
+        const result = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(url + "/Admin/change-username", request);
+        return buildResponseAdmin(result);
+    } catch  {
+        return buildResponseAdmin(null);
+    }
 } /**
 const onAction = () => {
 

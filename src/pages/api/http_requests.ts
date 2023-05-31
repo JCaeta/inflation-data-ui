@@ -2,7 +2,7 @@ import axios from "axios";
 import * as https from 'https';
 import moment from "moment";
 
-const url = "https://localhost:7173"
+const url = "https://inflation-data-server.up.railway.app"
 
 /**
     Standard messages
@@ -128,43 +128,76 @@ function buildResponseAdmin (result: any): AdminResponse {
 }
 
 export async function createInflationRequest(request: InflationRequest): Promise<InflationResponse>{
-    const result = await axios.post<any>(url + '/Inflation/create', request);
-    return buildResponseInflation(result);
+    try{
+        const result = await axios.post<any>(url + '/Inflation/create', request);
+        return buildResponseInflation(result);
+    } catch {
+        return buildResponseInflation(null)
+    }
 }
 
 export async function readInflationRequest(request: InflationRequest): Promise<InflationResponse>{
-    const result = await axios.post<any>(url + '/Inflation/read', request);
-    return buildResponseInflation(result)
+    try{
+        const result = await axios.post<any>(url + '/Inflation/read', request);
+        return buildResponseInflation(result)
+    } catch {
+        return buildResponseInflation(null)
+    }
+
 }
 
 export async function updateInflationRequest(request: InflationRequest): Promise<InflationResponse>{
-    const result = await axios.put<any>(url + '/Inflation/update', request);
-    return buildResponseInflation(result)
+    try{
+        const result = await axios.put<any>(url + '/Inflation/update', request);
+        return buildResponseInflation(result)
+    } catch {
+        return buildResponseInflation(null)
+    }
 }
 
 export async function deleteInflationRequest(request: InflationRequest): Promise<InflationResponse>{
-    const result = await axios.delete<any>(url + '/Inflation/delete/', {data: request});
-    return buildResponseInflation(result)
+    try{
+        const result = await axios.delete<any>(url + '/Inflation/delete/', {data: request});
+        return buildResponseInflation(result)
+    } catch {
+        return buildResponseInflation(null)
+    }
 }
 
 export async function getChartsDataRequest(request: ChartsRequest): Promise<ChartsResponse>{
-    const result = await axios.post<any>(url + '/Charts/get-data', request);
-    return buildResponseCharts(result)
+    try{
+        const result = await axios.post<any>(url + '/Charts/get-data', request);
+        return buildResponseCharts(result)
+    } catch {
+        return buildResponseCharts(null)
+    }
 }
 
 export async function signInAdminRequest(request: AdminRequest): Promise<AdminResponse>{
-    const result = await axios.post<any>(url + '/Admin/sign-in', request);
-    return buildResponseAdmin(result)
+    try{
+        const result = await axios.post<any>(url + '/Admin/sign-in', request);
+        return buildResponseAdmin(result)
+    } catch {
+        return buildResponseAdmin(null)
+    }
 }
 
 export async function changeAdminPasswordRequest(request: AdminRequest): Promise<AdminResponse>{
-    const result = await axios.post<any>(url + '/Admin/change-password', request);
-    return buildResponseAdmin(result)
+    try{
+        const result = await axios.post<any>(url + '/Admin/change-password', request);
+        return buildResponseAdmin(result)
+    } catch {
+        return buildResponseAdmin(null)
+    }
 }
 
 export async function changeAdminUsernameRequest(request: AdminRequest): Promise<AdminResponse>{
-    const result = await axios.post<any>(url + '/Admin/change-username', request);
-    return buildResponseAdmin(result)
+    try{
+        const result = await axios.post<any>(url + '/Admin/change-username', request);
+        return buildResponseAdmin(result)
+    } catch {
+        return buildResponseAdmin(null)
+    }
 }
 
 /**

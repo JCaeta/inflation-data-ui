@@ -9,7 +9,7 @@ import { ChartsRequest, ChartsResponse, getChartsDataRequest} from '../api/http_
 import { Login1 } from '@/components/Common/Login1/Login1';
 import { AdminRequest, AdminResponse, signInAdminRequest, changeAdminPasswordRequest, changeAdminUsernameRequest } from '../api/http_requests';
 import { useRouter } from 'next/router'
-
+import { ClosedPage } from '@/components/Common/ClosedPage/ClosedPage';
 
 const Admin: React.FC = () => {
     const inflationAdminRef = useRef(null);
@@ -23,6 +23,16 @@ const Admin: React.FC = () => {
     const [signInError, setSignInError] = useState(false);
     const [username, setUsername] = useState('');
     const router = useRouter();
+    const [closeSite, setCloseSite] = useState(false);
+
+    const verifyClosedSite = (message: {id: number, message: string}) => {
+        if(message.id !== -2){
+            return true
+        } else {
+            setCloseSite(true)
+            return false
+        }
+    }
 
     useEffect(() => {
         if(logged){
@@ -40,17 +50,21 @@ const Admin: React.FC = () => {
             token: null
         }
         const responseInflation: InflationResponse = await readInflationRequest(requestInflation)
-        inflationAdminRef.current.setTableData(responseInflation.inflationList);
-        getChartsData(null, null)
+        if(verifyClosedSite(responseInflation.message)){
+            inflationAdminRef.current.setTableData(responseInflation.inflationList);
+            getChartsData(null, null)
+        }
     }
 
     const getChartsData = async (startDate: Date, endDate: Date) => {
         const requestCharts: ChartsRequest = {startDate: startDate, endDate: endDate}
         const responseCharts: ChartsResponse = await getChartsDataRequest(requestCharts)
-        inflationAdminRef.current.setChartsData({
-            barChartData: responseCharts.barChartData,
-            lineChartData: responseCharts.lineChartData
-        })
+        if(verifyClosedSite(responseCharts.message)){
+            inflationAdminRef.current.setChartsData({
+                barChartData: responseCharts.barChartData,
+                lineChartData: responseCharts.lineChartData
+            })
+        }
     }
 
     const createInflation = async (inflation: any) => {
@@ -62,10 +76,13 @@ const Admin: React.FC = () => {
         }
 
         const response: InflationResponse = await createInflationRequest(request);
-        if(response.message.id === 1) {
-            inflationAdminRef.current.clearAddInputs()
-            setToken(response.token)
-            await refreshData()  
+
+        if(verifyClosedSite(response.message)){
+            if(response.message.id === 1) {
+                inflationAdminRef.current.clearAddInputs()
+                setToken(response.token)
+                await refreshData()  
+            }
         }
     }
 
@@ -82,8 +99,10 @@ const Admin: React.FC = () => {
             token: token
         }
         const response: InflationResponse = await readInflationRequest(request);
-        setToken(response.token)
-        inflationAdminRef.current.setTableData(response.inflationList);
+        if(verifyClosedSite(response.message)){
+            setToken(response.token)
+            inflationAdminRef.current.setTableData(response.inflationList);
+        }
     }
 
     const deleteInflation = async (inflation: any) => {
@@ -94,10 +113,12 @@ const Admin: React.FC = () => {
             token: token
         }
         const response: InflationResponse = await deleteInflationRequest(request);
-        if(response.message.id === 1) {
-            inflationAdminRef.current.clearAddInputs()
-            setToken(response.token)
-            await refreshData()  
+        if(verifyClosedSite(response.message)){
+            if(response.message.id === 1) {
+                inflationAdminRef.current.clearAddInputs()
+                setToken(response.token)
+                await refreshData()  
+            }
         }
     }
 
@@ -109,10 +130,12 @@ const Admin: React.FC = () => {
             token: token
         }
         const response: InflationResponse = await updateInflationRequest(request);
-        if(response.message.id === 1) {
-            inflationAdminRef.current.clearAddInputs()
-            setToken(response.token)
-            await refreshData()  
+        if(verifyClosedSite(response.message)){
+            if(response.message.id === 1) {
+                inflationAdminRef.current.clearAddInputs()
+                setToken(response.token)
+                await refreshData()  
+            }
         }
     }
 
@@ -131,14 +154,17 @@ const Admin: React.FC = () => {
         if(logged === false){
             const request: AdminRequest = {username: data.username, oldPassword: '', password: data.password, token: ''}
             const response: AdminResponse = await signInAdminRequest(request);
-            if(response.message.id === 1){
-                setLogged(true)
-                setSignInError(false)
-                setToken(response.token);
-                setUsername(username);
-            } else {
-                setLogged(false)
-                setSignInError(true)
+            
+            if(verifyClosedSite(response.message)){
+                if(response.message.id === 1){
+                    setLogged(true)
+                    setSignInError(false)
+                    setToken(response.token);
+                    setUsername(username);
+                } else {
+                    setLogged(false)
+                    setSignInError(true)
+                }
             }
         }
     }
@@ -146,35 +172,39 @@ const Admin: React.FC = () => {
     const onSubmitChangePassword = async (oldPassword: string, newPassword: string) => {
         const request: AdminRequest = {username: '', oldPassword: oldPassword, password: newPassword, token: token}
         const response: AdminResponse = await changeAdminPasswordRequest(request);
-        if(response.message.id === 1){
-            inflationAdminRef.current.adminGoBack()
-            setOldPasswordError(false)
-            setToken(response.token);
-            setErrorChangePassword(false)
-        } else if (response.message.id === -7){
-            setOldPasswordError(true)
-            setErrorChangePassword(false)
-        } else {
-            setErrorChangePassword(true)
-            setOldPasswordError(false)
+        if(verifyClosedSite(response.message)){
+            if(response.message.id === 1){
+                inflationAdminRef.current.adminGoBack()
+                setOldPasswordError(false)
+                setToken(response.token);
+                setErrorChangePassword(false)
+            } else if (response.message.id === -7){
+                setOldPasswordError(true)
+                setErrorChangePassword(false)
+            } else {
+                setErrorChangePassword(true)
+                setOldPasswordError(false)
+            }
         }
     }
 
     const onSubmitChangeUsername = async (newUsername: string, password: string) => {
         const request: AdminRequest = {username: newUsername, oldPassword: '', password: password, token: token}
         const response: AdminResponse = await changeAdminUsernameRequest(request);
-        if(response.message.id === 1){
-            inflationAdminRef.current.adminGoBack()
-            setUsername(newUsername);
-            setToken(response.token);
-            setErrorChangeUsernameBadPassword(false);
-            setErrorChangeUsername(false)
-        } else if (response.message.id === -7){
-            setErrorChangeUsernameBadPassword(true);
-            setErrorChangeUsername(false)
-        } else {
-            setErrorChangeUsername(true)
-            setErrorChangeUsernameBadPassword(false);
+        if(verifyClosedSite(response.message)){
+            if(response.message.id === 1){
+                inflationAdminRef.current.adminGoBack()
+                setUsername(newUsername);
+                setToken(response.token);
+                setErrorChangeUsernameBadPassword(false);
+                setErrorChangeUsername(false)
+            } else if (response.message.id === -7){
+                setErrorChangeUsernameBadPassword(true);
+                setErrorChangeUsername(false)
+            } else {
+                setErrorChangeUsername(true)
+                setErrorChangeUsernameBadPassword(false);
+            }
         }
     }
 
@@ -183,27 +213,29 @@ const Admin: React.FC = () => {
         setLogged(false);
         router.replace('/');
     }
-    
+
     return(<>
-        {logged?
-            <InflationAdminDesktop 
-                ref={inflationAdminRef}
-                onCreateInflation={createInflation}
-                onFilterDataSection={readInflation}
-                onDeleteInflation={deleteInflation}
-                onUpdateInflation={updateInflation}
-                onFilterChartSection={onFilterChartsSection}
-                onSubmitChangePassword={onSubmitChangePassword}
-                onSubmitChangeUsername={onSubmitChangeUsername}
-                errorOldPasswordWrong={oldPasswordError}
-                errorChangeUsername={errorChangeUsername}
-                errorChangePassword={errorChangePassword}
-                username={username}
-                errorChangeUsernameBadPassword={errorChangeUsernameBadPassword}
-                onLogout={onLogout}/>
-        : <Login1 
-            onSignInSubmit={onSignInSubmit}
-            error={signInError}/>}
+        {closeSite?<ClosedPage/>:
+            logged?
+                <InflationAdminDesktop 
+                    ref={inflationAdminRef}
+                    onCreateInflation={createInflation}
+                    onFilterDataSection={readInflation}
+                    onDeleteInflation={deleteInflation}
+                    onUpdateInflation={updateInflation}
+                    onFilterChartSection={onFilterChartsSection}
+                    onSubmitChangePassword={onSubmitChangePassword}
+                    onSubmitChangeUsername={onSubmitChangeUsername}
+                    errorOldPasswordWrong={oldPasswordError}
+                    errorChangeUsername={errorChangeUsername}
+                    errorChangePassword={errorChangePassword}
+                    username={username}
+                    errorChangeUsernameBadPassword={errorChangeUsernameBadPassword}
+                    onLogout={onLogout}/>
+            : <Login1 
+                onSignInSubmit={onSignInSubmit}
+                error={signInError}/>
+        }
     </>)
 };
 

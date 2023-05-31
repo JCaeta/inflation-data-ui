@@ -2,6 +2,7 @@ import styles from './ClosedPage.module.scss';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
+// import img1 from '/Closed.png';
 import img1 from './images/Closed.png';
 import {Container} from '@mui/material';
 

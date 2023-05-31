@@ -13,11 +13,11 @@ export default function Home() {
     const router = useRouter();
   
     useEffect(() => {
-      if (router.asPath === '/admin') {
-        router.replace('/admin');
-      } 
+        if (router.asPath === '/admin') {
+            router.replace('/admin');
+        }
 
-
+        
     }, []);
   
     if (router.asPath === '/admin') {
@@ -31,6 +31,7 @@ export default function Home() {
             </div>
         </main>
     </>);
+
 
 
 

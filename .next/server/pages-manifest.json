@@ -1,14 +1,13 @@
 {
   "/_app": "pages/_app.js",
+  "/admin": "pages/admin.js",
   "/_document": "pages/_document.js",
-  "/_error": "pages/_error.js",
-  "/admin": "pages/admin.html",
-  "/product/[productId]": "pages/product/[productId].html",
-  "/product/[productId]/review/[reviewId]": "pages/product/[productId]/review/[reviewId].html",
-  "/": "pages/index.html",
-  "/product": "pages/product.html",
-  "/product/sweater": "pages/product/sweater.html",
   "/api/http_requests": "pages/api/http_requests.js",
-  "/public": "pages/public.html",
-  "/404": "pages/404.html"
+  "/product/[productId]": "pages/product/[productId].js",
+  "/product/[productId]/review/[reviewId]": "pages/product/[productId]/review/[reviewId].js",
+  "/": "pages/index.js",
+  "/product": "pages/product.js",
+  "/public": "pages/public.js",
+  "/product/sweater": "pages/product/sweater.js",
+  "/_error": "pages/_error.js"
 }

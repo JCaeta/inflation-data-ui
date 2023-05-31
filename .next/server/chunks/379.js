@@ -1543,8 +1543,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Common_Login1_Login1__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(2436);
 /* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(1853);
 /* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _components_Common_ClosedPage_ClosedPage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(695);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_components_Desktop_InflationAdmin_InflationAdminDesktop__WEBPACK_IMPORTED_MODULE_1__, _api_http_requests__WEBPACK_IMPORTED_MODULE_3__]);
 ([_components_Desktop_InflationAdmin_InflationAdminDesktop__WEBPACK_IMPORTED_MODULE_1__, _api_http_requests__WEBPACK_IMPORTED_MODULE_3__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+
 
 
 
@@ -1568,6 +1570,15 @@ const Admin = ()=>{
     const [signInError, setSignInError] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
     const [username, setUsername] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)("");
     const router = (0,next_router__WEBPACK_IMPORTED_MODULE_5__.useRouter)();
+    const [closeSite, setCloseSite] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+    const verifyClosedSite = (message)=>{
+        if (message.id !== -2) {
+            return true;
+        } else {
+            setCloseSite(true);
+            return false;
+        }
+    };
     (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(()=>{
         if (logged) {
             onStart();
@@ -1584,8 +1595,10 @@ const Admin = ()=>{
             token: null
         };
         const responseInflation = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_3__/* .readInflationRequest */ .Qr)(requestInflation);
-        inflationAdminRef.current.setTableData(responseInflation.inflationList);
-        getChartsData(null, null);
+        if (verifyClosedSite(responseInflation.message)) {
+            inflationAdminRef.current.setTableData(responseInflation.inflationList);
+            getChartsData(null, null);
+        }
     };
     const getChartsData = async (startDate, endDate)=>{
         const requestCharts = {
@@ -1593,10 +1606,12 @@ const Admin = ()=>{
             endDate: endDate
         };
         const responseCharts = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_3__/* .getChartsDataRequest */ .Rv)(requestCharts);
-        inflationAdminRef.current.setChartsData({
-            barChartData: responseCharts.barChartData,
-            lineChartData: responseCharts.lineChartData
-        });
+        if (verifyClosedSite(responseCharts.message)) {
+            inflationAdminRef.current.setChartsData({
+                barChartData: responseCharts.barChartData,
+                lineChartData: responseCharts.lineChartData
+            });
+        }
     };
     const createInflation = async (inflation)=>{
         const request = {
@@ -1610,10 +1625,12 @@ const Admin = ()=>{
             token: token
         };
         const response = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_3__/* .createInflationRequest */ .fo)(request);
-        if (response.message.id === 1) {
-            inflationAdminRef.current.clearAddInputs();
-            setToken(response.token);
-            await refreshData();
+        if (verifyClosedSite(response.message)) {
+            if (response.message.id === 1) {
+                inflationAdminRef.current.clearAddInputs();
+                setToken(response.token);
+                await refreshData();
+            }
         }
     };
     const refreshData = async ()=>{
@@ -1628,8 +1645,10 @@ const Admin = ()=>{
             token: token
         };
         const response = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_3__/* .readInflationRequest */ .Qr)(request);
-        setToken(response.token);
-        inflationAdminRef.current.setTableData(response.inflationList);
+        if (verifyClosedSite(response.message)) {
+            setToken(response.token);
+            inflationAdminRef.current.setTableData(response.inflationList);
+        }
     };
     const deleteInflation = async (inflation)=>{
         const request = {
@@ -1639,10 +1658,12 @@ const Admin = ()=>{
             token: token
         };
         const response = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_3__/* .deleteInflationRequest */ .LM)(request);
-        if (response.message.id === 1) {
-            inflationAdminRef.current.clearAddInputs();
-            setToken(response.token);
-            await refreshData();
+        if (verifyClosedSite(response.message)) {
+            if (response.message.id === 1) {
+                inflationAdminRef.current.clearAddInputs();
+                setToken(response.token);
+                await refreshData();
+            }
         }
     };
     const updateInflation = async (inflation)=>{
@@ -1653,10 +1674,12 @@ const Admin = ()=>{
             token: token
         };
         const response = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_3__/* .updateInflationRequest */ .Li)(request);
-        if (response.message.id === 1) {
-            inflationAdminRef.current.clearAddInputs();
-            setToken(response.token);
-            await refreshData();
+        if (verifyClosedSite(response.message)) {
+            if (response.message.id === 1) {
+                inflationAdminRef.current.clearAddInputs();
+                setToken(response.token);
+                await refreshData();
+            }
         }
     };
     (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(()=>{
@@ -1677,14 +1700,16 @@ const Admin = ()=>{
                 token: ""
             };
             const response = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_3__/* .signInAdminRequest */ .o9)(request);
-            if (response.message.id === 1) {
-                setLogged(true);
-                setSignInError(false);
-                setToken(response.token);
-                setUsername(username);
-            } else {
-                setLogged(false);
-                setSignInError(true);
+            if (verifyClosedSite(response.message)) {
+                if (response.message.id === 1) {
+                    setLogged(true);
+                    setSignInError(false);
+                    setToken(response.token);
+                    setUsername(username);
+                } else {
+                    setLogged(false);
+                    setSignInError(true);
+                }
             }
         }
     };
@@ -1696,22 +1721,22 @@ const Admin = ()=>{
             token: token
         };
         const response = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_3__/* .changeAdminPasswordRequest */ .XK)(request);
-        if (response.message.id === 1) {
-            inflationAdminRef.current.adminGoBack();
-            setOldPasswordError(false);
-            setToken(response.token);
-            setErrorChangePassword(false);
-        } else if (response.message.id === -7) {
-            setOldPasswordError(true);
-            setErrorChangePassword(false);
-        } else {
-            setErrorChangePassword(true);
-            setOldPasswordError(false);
+        if (verifyClosedSite(response.message)) {
+            if (response.message.id === 1) {
+                inflationAdminRef.current.adminGoBack();
+                setOldPasswordError(false);
+                setToken(response.token);
+                setErrorChangePassword(false);
+            } else if (response.message.id === -7) {
+                setOldPasswordError(true);
+                setErrorChangePassword(false);
+            } else {
+                setErrorChangePassword(true);
+                setOldPasswordError(false);
+            }
         }
     };
     const onSubmitChangeUsername = async (newUsername, password)=>{
-        console.log("onSubmitChangeUsername");
-        console.log(": ");
         const request = {
             username: newUsername,
             oldPassword: "",
@@ -1719,19 +1744,20 @@ const Admin = ()=>{
             token: token
         };
         const response = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_3__/* .changeAdminUsernameRequest */ .fu)(request);
-        console.log("response: ", response);
-        if (response.message.id === 1) {
-            inflationAdminRef.current.adminGoBack();
-            setUsername(newUsername);
-            setToken(response.token);
-            setErrorChangeUsernameBadPassword(false);
-            setErrorChangeUsername(false);
-        } else if (response.message.id === -7) {
-            setErrorChangeUsernameBadPassword(true);
-            setErrorChangeUsername(false);
-        } else {
-            setErrorChangeUsername(true);
-            setErrorChangeUsernameBadPassword(false);
+        if (verifyClosedSite(response.message)) {
+            if (response.message.id === 1) {
+                inflationAdminRef.current.adminGoBack();
+                setUsername(newUsername);
+                setToken(response.token);
+                setErrorChangeUsernameBadPassword(false);
+                setErrorChangeUsername(false);
+            } else if (response.message.id === -7) {
+                setErrorChangeUsernameBadPassword(true);
+                setErrorChangeUsername(false);
+            } else {
+                setErrorChangeUsername(true);
+                setErrorChangeUsernameBadPassword(false);
+            }
         }
     };
     const onLogout = ()=>{
@@ -1740,7 +1766,7 @@ const Admin = ()=>{
         router.replace("/");
     };
     return /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-        children: logged ? /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_components_Desktop_InflationAdmin_InflationAdminDesktop__WEBPACK_IMPORTED_MODULE_1__/* .InflationAdminDesktop */ .S, {
+        children: closeSite ? /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_components_Common_ClosedPage_ClosedPage__WEBPACK_IMPORTED_MODULE_6__/* .ClosedPage */ .e, {}) : logged ? /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_components_Desktop_InflationAdmin_InflationAdminDesktop__WEBPACK_IMPORTED_MODULE_1__/* .InflationAdminDesktop */ .S, {
             ref: inflationAdminRef,
             onCreateInflation: createInflation,
             onFilterDataSection: readInflation,

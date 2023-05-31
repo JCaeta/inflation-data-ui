@@ -20,8 +20,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5692);
 /* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_mui_material__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _api_http_requests__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3742);
+/* harmony import */ var _components_Common_ClosedPage_ClosedPage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(695);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_components_Desktop_ChartSection_ChartSectionDesktop__WEBPACK_IMPORTED_MODULE_2__, _api_http_requests__WEBPACK_IMPORTED_MODULE_4__]);
 ([_components_Desktop_ChartSection_ChartSectionDesktop__WEBPACK_IMPORTED_MODULE_2__, _api_http_requests__WEBPACK_IMPORTED_MODULE_4__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+
 
 
 
@@ -30,19 +32,32 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_com
 const Public = ()=>{
     const [data, setData] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
     const [start, setStart] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+    const [closeSite, setCloseSite] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+    const verifyResponseMessage = (message)=>{
+        if (message.id === 1) {
+            return true;
+        } else if (message.id === -2) {
+            setCloseSite(true);
+            return false;
+        }
+    };
     const onStart = async ()=>{
         getChartsData(null, null);
     };
     const getChartsData = async (startDate, endDate)=>{
+        console.log("getChartsData");
         const requestCharts = {
             startDate: startDate,
             endDate: endDate
         };
         const responseCharts = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_4__/* .getChartsDataRequest */ .Rv)(requestCharts);
-        setData({
-            barChartData: responseCharts.barChartData,
-            lineChartData: responseCharts.lineChartData
-        });
+        console.log("responseCharts: ", responseCharts);
+        if (verifyResponseMessage(responseCharts.message)) {
+            setData({
+                barChartData: responseCharts.barChartData,
+                lineChartData: responseCharts.lineChartData
+            });
+        }
     };
     // const refreshData = async () => {
     //     console.log("refreshData")
@@ -60,7 +75,7 @@ const Public = ()=>{
         getChartsData(startDate, endDate);
     };
     return /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-        children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_mui_material__WEBPACK_IMPORTED_MODULE_3__.Container, {
+        children: closeSite ? /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_components_Common_ClosedPage_ClosedPage__WEBPACK_IMPORTED_MODULE_5__/* .ClosedPage */ .e, {}) : /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_mui_material__WEBPACK_IMPORTED_MODULE_3__.Container, {
             maxWidth: false,
             children: /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_components_Desktop_ChartSection_ChartSectionDesktop__WEBPACK_IMPORTED_MODULE_2__/* .ChartSectionDesktop */ .t, {
                 data: data,
@@ -71,7 +86,14 @@ const Public = ()=>{
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Public);
 Public.defaultProps = {};
-Public.propTypes = {};
+Public.propTypes = {} /**
+const onAction = () => {
+
+}
+console.log("")
+console.log(": ", )
+
+ */ ;
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } });

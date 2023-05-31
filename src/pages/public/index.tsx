@@ -6,24 +6,38 @@ import { Container } from '@mui/material';
 import { ChartsRequest } from '../api/http_requests';
 import {ChartsResponse} from '../api/http_requests';
 import { getChartsDataRequest } from '../api/http_requests';
+import { ClosedPage } from '@/components/Common/ClosedPage/ClosedPage';
 
 export const Public = () => {
     const [data, setData] = useState(null)
     const [start, setStart] = useState(false);
+    const [closeSite, setCloseSite] = useState(false);
+
+    const verifyResponseMessage = (message: {id: number, message: string}) => {
+        if(message.id === 1){
+            return true
+        } else if (message.id === -2){
+            setCloseSite(true)
+            return false
+        }
+    }
 
     const onStart = async () => {
         getChartsData(null, null)
     }
 
     const getChartsData = async (startDate: Date, endDate: Date) => {
+        console.log("getChartsData")
         const requestCharts: ChartsRequest = {startDate: startDate, endDate: endDate}
         const responseCharts: ChartsResponse = await getChartsDataRequest(requestCharts)
-        setData({
-            barChartData: responseCharts.barChartData,
-            lineChartData: responseCharts.lineChartData
-        })
+        console.log("responseCharts: ", responseCharts)
+        if(verifyResponseMessage(responseCharts.message)){
+            setData({
+                barChartData: responseCharts.barChartData,
+                lineChartData: responseCharts.lineChartData
+            })
+        }
     }
-
 
     // const refreshData = async () => {
     //     console.log("refreshData")
@@ -44,12 +58,16 @@ export const Public = () => {
 
     }
 
+
+
+
     return (<>
+        {closeSite? <ClosedPage/>:
         <Container maxWidth={false}>
             <ChartSectionDesktop
                 data={data}
                 onFilter={onFilter}/>
-        </Container>
+        </Container>}
     </>);
 }
 
@@ -65,3 +83,11 @@ Public.propTypes =
 
 }
 
+/**
+const onAction = () => {
+
+}
+console.log("")
+console.log(": ", )
+
+ */
