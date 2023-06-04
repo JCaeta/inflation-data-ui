@@ -20,7 +20,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5692);
 /* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_mui_material__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _api_http_requests__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3742);
-/* harmony import */ var _components_Common_ClosedPage_ClosedPage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(695);
+/* harmony import */ var _components_Common_ClosedPage_ClosedPage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(8060);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_components_Desktop_ChartSection_ChartSectionDesktop__WEBPACK_IMPORTED_MODULE_2__, _api_http_requests__WEBPACK_IMPORTED_MODULE_4__]);
 ([_components_Desktop_ChartSection_ChartSectionDesktop__WEBPACK_IMPORTED_MODULE_2__, _api_http_requests__WEBPACK_IMPORTED_MODULE_4__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 
@@ -45,13 +45,11 @@ const Public = ()=>{
         getChartsData(null, null);
     };
     const getChartsData = async (startDate, endDate)=>{
-        console.log("getChartsData");
         const requestCharts = {
             startDate: startDate,
             endDate: endDate
         };
         const responseCharts = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_4__/* .getChartsDataRequest */ .Rv)(requestCharts);
-        console.log("responseCharts: ", responseCharts);
         if (verifyResponseMessage(responseCharts.message)) {
             setData({
                 barChartData: responseCharts.barChartData,

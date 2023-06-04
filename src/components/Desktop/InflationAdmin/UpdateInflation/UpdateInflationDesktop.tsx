@@ -1,14 +1,15 @@
 import styles from './UpdateInflationDesktop.module.scss';
 import React, {useState, useEffect, forwardRef, useImperativeHandle, useRef} from 'react';
 import PropTypes from 'prop-types';
-import { DataInput2 } from '../../../Common/Inputs/DataInput2/DataInput2';
 import {Button, Grid} from '@mui/material';
 import { MessageBox } from '../../../Common/MessageBox/MessageBox';
+import { DataInput0 } from '../../../Common/Inputs/DataInput0/DataInput0';
 
 export const UpdateInflationDesktop  = forwardRef((props: any, ref: any) => {
     const [open, setOpen] = useState(false);
     const dataInputRef = useRef(null)
     const [inflation, setInflationIntern] = useState(null)
+    const [confirmation, setConfirmation] = useState(false);
 
     const onUpdate = () => {
         openConfirmationMessage()
@@ -24,7 +25,14 @@ export const UpdateInflationDesktop  = forwardRef((props: any, ref: any) => {
 
     const onYesConfirmation = () => {
         setOpen(false)
-        props.onUpdate(inflation);
+        const date = dataInputRef.current.getDateValue()
+        const num = dataInputRef.current.getNumberValue()
+        setInflationIntern({
+            id: inflation.id,
+            date: date,
+            value: num
+        })
+        setConfirmation(true)
     }
 
     useEffect(() => {
@@ -39,37 +47,18 @@ export const UpdateInflationDesktop  = forwardRef((props: any, ref: any) => {
     }, [])
 
     useEffect(() => {
-        if(inflation != null){
-            dataInputRef.current.setDate(inflation.date)
-            dataInputRef.current.setNumber(inflation.value)
+        if(confirmation){
+            props.onUpdate(inflation);
         }
-    }, [inflation])
+        setConfirmation(false);
+
+    }, [inflation, confirmation])
 
     useImperativeHandle(ref, () => ({
         setInflation(inflation: any){
-            console.log("setInflation")
-            console.log("inflation: ", inflation)
             setInflationIntern(inflation)
-            dataInputRef.current.setDate(inflation.date)
-            dataInputRef.current.setNumber(inflation.value)
         }
     }))
-
-    const onDateChange = (date: Date) => {
-        setInflationIntern({
-            id: inflation.id,
-            date: date,
-            value: inflation.value
-        })
-    }
-
-    const onNumberChange = (number: number) => {
-        setInflationIntern({
-            id: inflation.id,
-            date: inflation.date,
-            value: number
-        })
-    }
 
     return (<>
         <Grid 
@@ -77,12 +66,14 @@ export const UpdateInflationDesktop  = forwardRef((props: any, ref: any) => {
             direction={'column'} 
             sx={{my: 2}} >
             <Grid item sx={{my: 2}}>
-                <DataInput2
+                <DataInput0
                     ref={dataInputRef}
                     inputNumberText='Inflation %'
-                    onDateChange={onDateChange}
-                    onNumberChange={onNumberChange}
-                    title=''/>
+                    title=''
+                    buttonSubmitVisible={false}
+                    inputNumberValue={inflation?.value || null}
+                    inputDateValue={inflation?.date || ''}
+                />
             </Grid>
             <Grid 
                 item 

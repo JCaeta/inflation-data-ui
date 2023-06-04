@@ -458,6 +458,8 @@ console.log("  ")
 
 const theme = (0,_mui_material_styles__WEBPACK_IMPORTED_MODULE_11__.createTheme)();
 const Login1 = (props)=>{
+    console.log("Login1");
+    // console.log("inflation: ", inflation)
     const handleSubmit = (event)=>{
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -579,7 +581,7 @@ console.log("  ")
 
 /***/ }),
 
-/***/ 8626:
+/***/ 205:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 
@@ -597,6 +599,15 @@ var external_prop_types_ = __webpack_require__(580);
 var external_prop_types_default = /*#__PURE__*/__webpack_require__.n(external_prop_types_);
 // EXTERNAL MODULE: external "@mui/material"
 var material_ = __webpack_require__(5692);
+// EXTERNAL MODULE: external "@mui/x-date-pickers/AdapterDayjs"
+var AdapterDayjs_ = __webpack_require__(298);
+// EXTERNAL MODULE: external "@mui/x-date-pickers/LocalizationProvider"
+var LocalizationProvider_ = __webpack_require__(5753);
+// EXTERNAL MODULE: external "@mui/x-date-pickers/DatePicker"
+var DatePicker_ = __webpack_require__(1856);
+// EXTERNAL MODULE: external "dayjs"
+var external_dayjs_ = __webpack_require__(1635);
+var external_dayjs_default = /*#__PURE__*/__webpack_require__.n(external_dayjs_);
 ;// CONCATENATED MODULE: ./src/components/Common/Inputs/DataInput0/DataInput0.tsx
 
 
@@ -604,24 +615,43 @@ var material_ = __webpack_require__(5692);
 
 
 
+
+
+
+
 const DataInput0 = /*#__PURE__*/ (0,external_react_.forwardRef)((props, ref)=>{
-    const [inputNumber, setInputNumber] = (0,external_react_.useState)(props.inputNumberValue);
-    const [inputDate, setInputDate] = (0,external_react_.useState)(props.inputDateValue);
+    const [inputNumber, setInputNumber] = (0,external_react_.useState)("");
+    const [numberShrink, setNumberShrink] = (0,external_react_.useState)(false);
+    const [inputDate, setInputDate] = (0,external_react_.useState)(null);
+    const [spacingInputs, setSpacingInputs] = (0,external_react_.useState)(5);
     // Set value of inputNumber and inputDate
     (0,external_react_.useEffect)(()=>{
         if (props.inputDateValue instanceof Date) {
-            setInputDate(props.inputDateValue.toISOString().split("T")[0]); // ''yyyy-MM-dd'
+            const timeZoneOffset = props.inputDateValue.getTimezoneOffset();
+            props.inputDateValue.setMinutes(props.inputDateValue.getMinutes() + timeZoneOffset);
+            setInputDate(external_dayjs_default()(props.inputDateValue));
         } else {
             setInputDate("");
         }
         if (typeof props.inputNumberValue === "number") {
             setInputNumber(props.inputNumberValue);
+            setNumberShrink(true);
         } else {
             setInputNumber("");
+            setNumberShrink(false);
         }
     }, [
         props.inputNumberValue,
         props.inputDateValue
+    ]);
+    (0,external_react_.useEffect)(()=>{
+        if (props.buttonSubmitVisible) {
+            setSpacingInputs(5);
+        } else {
+            setSpacingInputs(6);
+        }
+    }, [
+        props.buttonSubmitVisible
     ]);
     // Functions
     const onNumberChange = (event)=>{
@@ -631,21 +661,42 @@ const DataInput0 = /*#__PURE__*/ (0,external_react_.forwardRef)((props, ref)=>{
             setInputNumber(event.target.value);
         }
     };
+    (0,external_react_.useEffect)(()=>{
+        if (inputNumber != "") {
+            setNumberShrink(true);
+        } else {
+            setNumberShrink(false);
+        }
+    }, [
+        inputNumber
+    ]);
     (0,external_react_.useImperativeHandle)(ref, ()=>({
             clear () {
                 setInputDate("");
                 setInputNumber("");
+            },
+            getDateValue () {
+                const date = new Date(inputDate);
+                const timeZoneOffset = date.getTimezoneOffset();
+                date.setMinutes(date.getMinutes() + timeZoneOffset);
+                return date;
+            },
+            getNumberValue () {
+                return parseFloat(inputNumber);
             }
         }));
-    const onDateChange = (event)=>{
-        setInputDate(event.target.value);
+    const onDateChange = (date)=>{
+        if (date) {
+            setInputDate(date.toDate());
+        } else {
+            setInputDate("");
+        }
     };
     const onSubmit = ()=>{
         const date = new Date(inputDate);
         const timeZoneOffset = date.getTimezoneOffset();
         date.setMinutes(date.getMinutes() + timeZoneOffset);
         props.onSubmit(parseFloat(inputNumber), date);
-    // Here you can perform any necessary actions with the input data, such as sending it to a backend server
     };
     return /*#__PURE__*/ (0,jsx_runtime_.jsxs)(jsx_runtime_.Fragment, {
         children: [
@@ -659,32 +710,45 @@ const DataInput0 = /*#__PURE__*/ (0,external_react_.forwardRef)((props, ref)=>{
                 children: [
                     /*#__PURE__*/ jsx_runtime_.jsx(material_.Grid, {
                         item: true,
-                        xs: 5,
+                        xs: spacingInputs,
                         children: /*#__PURE__*/ jsx_runtime_.jsx(material_.TextField, {
                             label: props.inputNumberText,
                             variant: "outlined",
                             type: "text",
-                            value: inputNumber,
+                            InputLabelProps: {
+                                shrink: numberShrink
+                            },
+                            value: inputNumber ? inputNumber : "",
                             onChange: onNumberChange,
                             fullWidth: true
                         })
                     }),
                     /*#__PURE__*/ jsx_runtime_.jsx(material_.Grid, {
                         item: true,
-                        xs: 5,
-                        children: /*#__PURE__*/ jsx_runtime_.jsx(material_.TextField, {
-                            label: "Date Input",
-                            variant: "outlined",
-                            type: "date",
-                            value: inputDate,
-                            onChange: onDateChange,
-                            fullWidth: true,
-                            InputLabelProps: {
-                                shrink: true
-                            }
+                        xs: spacingInputs,
+                        children: /*#__PURE__*/ jsx_runtime_.jsx(LocalizationProvider_.LocalizationProvider, {
+                            dateAdapter: AdapterDayjs_.AdapterDayjs,
+                            children: /*#__PURE__*/ jsx_runtime_.jsx(DatePicker_.DatePicker, {
+                                sx: {
+                                    width: "100%"
+                                },
+                                onChange: onDateChange,
+                                slotProps: {
+                                    textField: {
+                                        error: false
+                                    },
+                                    actionBar: {
+                                        actions: [
+                                            "clear"
+                                        ]
+                                    }
+                                },
+                                value: inputDate,
+                                format: "DD-MM-YYYY"
+                            })
                         })
                     }),
-                    /*#__PURE__*/ jsx_runtime_.jsx(material_.Grid, {
+                    props.buttonSubmitVisible ? /*#__PURE__*/ jsx_runtime_.jsx(material_.Grid, {
                         item: true,
                         xs: 2,
                         children: /*#__PURE__*/ jsx_runtime_.jsx(material_.Button, {
@@ -692,7 +756,7 @@ const DataInput0 = /*#__PURE__*/ (0,external_react_.forwardRef)((props, ref)=>{
                             onClick: onSubmit,
                             children: props.buttonText
                         })
-                    })
+                    }) : null
                 ]
             })
         ]
@@ -704,7 +768,8 @@ DataInput0.defaultProps = {
     buttonText: "Submit",
     title: "Title",
     inputNumberValue: "",
-    inputDateValue: ""
+    inputDateValue: "",
+    buttonSubmitVisible: true
 };
 DataInput0.propTypes = {
     inputNumberText: (external_prop_types_default()).string,
@@ -712,9 +777,15 @@ DataInput0.propTypes = {
     buttonText: (external_prop_types_default()).string,
     title: (external_prop_types_default()).string,
     inputNumberValue: (external_prop_types_default()).any,
-    inputDateValue: (external_prop_types_default()).any
+    inputDateValue: (external_prop_types_default()).any,
+    buttonSubmitVisible: (external_prop_types_default()).bool
 } /**
+const onAction = () => {
+
+}
 console.log("")
+console.log(": ", )
+
  */ ;
 
 // EXTERNAL MODULE: external "@mui/icons-material"
@@ -793,108 +864,6 @@ Table0.propTypes = {
 
 // EXTERNAL MODULE: ./src/components/Common/Inputs/DataInput1/DataInput1.tsx
 var DataInput1 = __webpack_require__(6902);
-;// CONCATENATED MODULE: ./src/components/Common/Inputs/DataInput2/DataInput2.tsx
-
-
-
-
-
-const DataInput2 = /*#__PURE__*/ (0,external_react_.forwardRef)((props, ref)=>{
-    const [numberValue, setNumberValue] = (0,external_react_.useState)("");
-    const [dateValue, setDateValue] = (0,external_react_.useState)("");
-    const onNumberChange = (event)=>{
-        // Accepts only integer or decimal input
-        const regex = /^[0-9]*\.?[0-9]*$/;
-        if (regex.test(event.target.value)) {
-            props.onNumberChange(parseFloat(event.target.value));
-            setNumberValue(event.target.value);
-        }
-    };
-    const onDateChange = (event)=>{
-        if (event.target.value != "") {
-            const date = new Date(event.target.value);
-            const timeZoneOffset = date.getTimezoneOffset();
-            date.setMinutes(date.getMinutes() + timeZoneOffset);
-            setDateValue(date.toISOString().split("T")[0]);
-            props.onDateChange(date);
-        } else {
-            setDateValue("");
-        }
-    };
-    (0,external_react_.useImperativeHandle)(ref, ()=>({
-            setNumber (value) {
-                setNumberValue(value);
-            },
-            setDate (date) {
-                setDateValue(date.toISOString().split("T")[0]);
-            },
-            clear () {
-                setNumberValue("");
-                setDateValue("");
-            }
-        }));
-    return /*#__PURE__*/ (0,jsx_runtime_.jsxs)(jsx_runtime_.Fragment, {
-        children: [
-            /*#__PURE__*/ jsx_runtime_.jsx("h2", {
-                children: props.title
-            }),
-            /*#__PURE__*/ (0,jsx_runtime_.jsxs)(material_.Grid, {
-                container: true,
-                spacing: 2,
-                alignItems: "center",
-                children: [
-                    /*#__PURE__*/ jsx_runtime_.jsx(material_.Grid, {
-                        item: true,
-                        xs: 6,
-                        children: /*#__PURE__*/ jsx_runtime_.jsx(material_.TextField, {
-                            label: props.inputNumberText,
-                            variant: "outlined",
-                            type: "text",
-                            value: numberValue,
-                            onChange: onNumberChange,
-                            fullWidth: true
-                        })
-                    }),
-                    /*#__PURE__*/ jsx_runtime_.jsx(material_.Grid, {
-                        item: true,
-                        xs: 6,
-                        children: /*#__PURE__*/ jsx_runtime_.jsx(material_.TextField, {
-                            label: "Date Input",
-                            variant: "outlined",
-                            type: "date",
-                            value: dateValue,
-                            onChange: onDateChange,
-                            fullWidth: true,
-                            InputLabelProps: {
-                                shrink: true
-                            }
-                        })
-                    })
-                ]
-            })
-        ]
-    });
-});
-DataInput2.defaultProps = {
-    inputNumberText: "Number Input",
-    title: "Title",
-    onNumberChange: null,
-    onDateChange: null
-};
-DataInput2.propTypes = {
-    inputNumberText: (external_prop_types_default()).string,
-    title: (external_prop_types_default()).string,
-    onNumberChange: (external_prop_types_default()).func,
-    onDateChange: (external_prop_types_default()).func
-} /**
-const onAction = () => {
-
-}
-console.log("")
-console.log(": ", )
-
- */ ;
-
 ;// CONCATENATED MODULE: ./src/components/Common/MessageBox/MessageBox.tsx
 
 
@@ -984,6 +953,7 @@ const UpdateInflationDesktop = /*#__PURE__*/ (0,external_react_.forwardRef)((pro
     const [open, setOpen] = (0,external_react_.useState)(false);
     const dataInputRef = (0,external_react_.useRef)(null);
     const [inflation, setInflationIntern] = (0,external_react_.useState)(null);
+    const [confirmation, setConfirmation] = (0,external_react_.useState)(false);
     const onUpdate = ()=>{
         openConfirmationMessage();
     };
@@ -995,7 +965,14 @@ const UpdateInflationDesktop = /*#__PURE__*/ (0,external_react_.forwardRef)((pro
     };
     const onYesConfirmation = ()=>{
         setOpen(false);
-        props.onUpdate(inflation);
+        const date = dataInputRef.current.getDateValue();
+        const num = dataInputRef.current.getNumberValue();
+        setInflationIntern({
+            id: inflation.id,
+            date: date,
+            value: num
+        });
+        setConfirmation(true);
     };
     (0,external_react_.useEffect)(()=>{
         if (props.inflation != null) {
@@ -1007,36 +984,19 @@ const UpdateInflationDesktop = /*#__PURE__*/ (0,external_react_.forwardRef)((pro
         }
     }, []);
     (0,external_react_.useEffect)(()=>{
-        if (inflation != null) {
-            dataInputRef.current.setDate(inflation.date);
-            dataInputRef.current.setNumber(inflation.value);
+        if (confirmation) {
+            props.onUpdate(inflation);
         }
+        setConfirmation(false);
     }, [
-        inflation
+        inflation,
+        confirmation
     ]);
     (0,external_react_.useImperativeHandle)(ref, ()=>({
             setInflation (inflation) {
-                console.log("setInflation");
-                console.log("inflation: ", inflation);
                 setInflationIntern(inflation);
-                dataInputRef.current.setDate(inflation.date);
-                dataInputRef.current.setNumber(inflation.value);
             }
         }));
-    const onDateChange = (date)=>{
-        setInflationIntern({
-            id: inflation.id,
-            date: date,
-            value: inflation.value
-        });
-    };
-    const onNumberChange = (number)=>{
-        setInflationIntern({
-            id: inflation.id,
-            date: inflation.date,
-            value: number
-        });
-    };
     return /*#__PURE__*/ (0,jsx_runtime_.jsxs)(jsx_runtime_.Fragment, {
         children: [
             /*#__PURE__*/ (0,jsx_runtime_.jsxs)(material_.Grid, {
@@ -1051,12 +1011,13 @@ const UpdateInflationDesktop = /*#__PURE__*/ (0,external_react_.forwardRef)((pro
                         sx: {
                             my: 2
                         },
-                        children: /*#__PURE__*/ jsx_runtime_.jsx(DataInput2, {
+                        children: /*#__PURE__*/ jsx_runtime_.jsx(DataInput0, {
                             ref: dataInputRef,
                             inputNumberText: "Inflation %",
-                            onDateChange: onDateChange,
-                            onNumberChange: onNumberChange,
-                            title: ""
+                            title: "",
+                            buttonSubmitVisible: false,
+                            inputNumberValue: inflation?.value || null,
+                            inputDateValue: inflation?.date || ""
                         })
                     }),
                     /*#__PURE__*/ (0,jsx_runtime_.jsxs)(material_.Grid, {
@@ -1356,7 +1317,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(5692);
 /* harmony import */ var _mui_material__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_mui_material__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _DataSection_DataSectionDesktop__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(8626);
+/* harmony import */ var _DataSection_DataSectionDesktop__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(205);
 /* harmony import */ var _ChartSection_ChartSectionDesktop__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(685);
 /* harmony import */ var _Common_AdminProfile_AdminProfile__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(8788);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_ChartSection_ChartSectionDesktop__WEBPACK_IMPORTED_MODULE_5__]);
@@ -1543,7 +1504,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Common_Login1_Login1__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(2436);
 /* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(1853);
 /* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _components_Common_ClosedPage_ClosedPage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(695);
+/* harmony import */ var _components_Common_ClosedPage_ClosedPage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(8060);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_components_Desktop_InflationAdmin_InflationAdminDesktop__WEBPACK_IMPORTED_MODULE_1__, _api_http_requests__WEBPACK_IMPORTED_MODULE_3__]);
 ([_components_Desktop_InflationAdmin_InflationAdminDesktop__WEBPACK_IMPORTED_MODULE_1__, _api_http_requests__WEBPACK_IMPORTED_MODULE_3__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 
@@ -1630,11 +1591,12 @@ const Admin = ()=>{
                 inflationAdminRef.current.clearAddInputs();
                 setToken(response.token);
                 await refreshData();
-            }
+            } else {}
         }
     };
     const refreshData = async ()=>{
-        const dates = inflationAdminRef.current.getFilterData();
+        // const dates = inflationAdminRef.current.getFilterData()
+        const dates = inflationAdminRef.current.getFilterDataSection();
         await readInflation(dates.date1, dates.date2);
     };
     const readInflation = async (startDate, endDate)=>{
@@ -1705,7 +1667,7 @@ const Admin = ()=>{
                     setLogged(true);
                     setSignInError(false);
                     setToken(response.token);
-                    setUsername(username);
+                    setUsername(data.username);
                 } else {
                     setLogged(false);
                     setSignInError(true);

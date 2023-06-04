@@ -3,8 +3,10 @@ import * as https from 'https';
 import moment from "moment";
 
 const url = "https://inflation-data-server.up.railway.app"
+// const url = process.env.URL;
+// const url = "http://localhost:5001";
 
-/**
+/**ld
     Standard messages
     id: message
     1: Succeeded
@@ -33,7 +35,7 @@ export interface InflationResponse {
         id: number;
         date: Date;
         value: number;
-      }>;
+      }>
 }
 
 export interface ChartsRequest {
@@ -143,7 +145,6 @@ export async function readInflationRequest(request: InflationRequest): Promise<I
     } catch {
         return buildResponseInflation(null)
     }
-
 }
 
 export async function updateInflationRequest(request: InflationRequest): Promise<InflationResponse>{

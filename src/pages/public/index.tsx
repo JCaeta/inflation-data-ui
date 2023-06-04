@@ -27,10 +27,8 @@ export const Public = () => {
     }
 
     const getChartsData = async (startDate: Date, endDate: Date) => {
-        console.log("getChartsData")
         const requestCharts: ChartsRequest = {startDate: startDate, endDate: endDate}
         const responseCharts: ChartsResponse = await getChartsDataRequest(requestCharts)
-        console.log("responseCharts: ", responseCharts)
         if(verifyResponseMessage(responseCharts.message)){
             setData({
                 barChartData: responseCharts.barChartData,
@@ -57,9 +55,6 @@ export const Public = () => {
         getChartsData(startDate, endDate);
 
     }
-
-
-
 
     return (<>
         {closeSite? <ClosedPage/>:

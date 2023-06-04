@@ -21,7 +21,9 @@ export default function Home() {
     }, []);
   
     if (router.asPath === '/admin') {
-      return <Admin />;
+        return(
+            <Admin />
+        )
     }
 
     return (<>
@@ -31,20 +33,4 @@ export default function Home() {
             </div>
         </main>
     </>);
-
-
-
-
-//   return (<>
-//         <Head>
-//             <title>Home</title>
-//         </Head>
-//         <main>
-//             {router.asPath === '/' && (
-//             <div>
-//                 <Public />
-//             </div>
-//             )}
-//         </main>
-//     </>);
 }

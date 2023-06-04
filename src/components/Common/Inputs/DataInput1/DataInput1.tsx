@@ -4,10 +4,15 @@ import PropTypes from 'prop-types';
 import { TextField } from '@mui/material';
 import { Button } from '@mui/material';
 import { Grid } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
+
 
 export const DataInput1 = forwardRef((props: any, ref: any) => {
-    const [date1, setDate1] = useState('');
-    const [date2, setDate2] = useState('');
+    const [date1, setDate1] = useState<any>('');
+    const [date2, setDate2] = useState<any>('');
 
     useImperativeHandle(ref, () => ({
         clear(){
@@ -16,11 +21,15 @@ export const DataInput1 = forwardRef((props: any, ref: any) => {
         },
 
         setDate1(date1: Date){
-            setDate1(date1.toISOString().split('T')[0])
+            const timeZoneOffset = date1.getTimezoneOffset();
+            date1.setMinutes(date1.getMinutes() + timeZoneOffset);
+            setDate1(dayjs(date1))
         },
 
         setDate2(date2: Date){
-            setDate2(date2.toISOString().split('T')[0])
+            const timeZoneOffset = date2.getTimezoneOffset();
+            date2.setMinutes(date2.getMinutes() + timeZoneOffset);
+            setDate2(dayjs(date2))
         },
 
         getDates(){
@@ -28,32 +37,36 @@ export const DataInput1 = forwardRef((props: any, ref: any) => {
         }
     }))
 
-    const handleDate1 = (event: any) => {
-        setDate1(event.target.value);
+    const handleDate1 = (date: any) => {
+        if (date) {
+            setDate1(date);
+          } else {
+            setDate1('');
+          }
     };
   
-    const handleDate2 = (event: any) => {
-        setDate2(event.target.value);
+    const handleDate2 = (date: any) => {
+        if (date) {
+            setDate2(date); 
+          } else {
+            setDate2('');
+          }
     };
-  
+
     const onSubmit = () => {
         const dates = buildDates()
         props.onSubmit(dates.date1, dates.date2)
     };
 
     const buildDates = () => {
-        var d1 = null
-        var d2 = null
+        let d1 = null
+        let d2 = null
         if(date1 != ''){
-            d1 = new Date(date1);
-            const timeZoneOffsetDate1 = d1.getTimezoneOffset();
-            d1.setMinutes(d1.getMinutes() + timeZoneOffsetDate1);
+            d1 = date1.toDate()
         }
 
         if(date2 != ''){
-            d2 = new Date(date2);
-            const timeZoneOffsetDate2 = d2.getTimezoneOffset();
-            d2.setMinutes(d2.getMinutes() + timeZoneOffsetDate2);
+            d2 = date2.toDate()
         }
         return {date1: d1, date2: d2}
     }
@@ -62,28 +75,38 @@ export const DataInput1 = forwardRef((props: any, ref: any) => {
         <h2>{props.title}</h2>
         <Grid container spacing={2} alignItems="center">
             <Grid item xs={5}>
-                <TextField
-                    label={props.date1Text}
-                    variant="outlined"
-                    type="date"
-                    value={date1} 
-                    onChange={handleDate1}
-                    fullWidth
-                    InputLabelProps={{
-                        shrink: true,
-                    }}/>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker 
+                        sx={{ width: '100%'}}
+                        slotProps={{
+                            textField: {
+                                error: false,
+                            },
+                            actionBar: {
+                                actions: ['clear'],
+                            }
+                        }}
+                        onChange={handleDate1} 
+                        value={date1}
+                        format="DD-MM-YYYY"/>
+                </LocalizationProvider>
             </Grid>
             <Grid item xs={5}>
-                <TextField
-                    label={props.date2Text}
-                    variant="outlined"
-                    type="date"
-                    value={date2} 
-                    onChange={handleDate2}
-                    fullWidth
-                    InputLabelProps={{
-                        shrink: true,
-                    }}/>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker 
+                        sx={{ width: '100%' }}
+                        slotProps={{
+                            textField: {
+                                error: false,
+                            },
+                            actionBar: {
+                                actions: ['clear'],
+                            }
+                        }}
+                        value={date2}
+                        onChange={handleDate2} 
+                        format="DD-MM-YYYY"/>
+                </LocalizationProvider>
             </Grid>
             <Grid item xs={2}>
                 <Button variant="contained" onClick={onSubmit}>

@@ -82,12 +82,15 @@ const Admin: React.FC = () => {
                 inflationAdminRef.current.clearAddInputs()
                 setToken(response.token)
                 await refreshData()  
+            } else {
+                
             }
         }
     }
 
     const refreshData = async () => {
-        const dates = inflationAdminRef.current.getFilterData()
+        // const dates = inflationAdminRef.current.getFilterData()
+        const dates = inflationAdminRef.current.getFilterDataSection()
         await readInflation(dates.date1, dates.date2)
     }
     
@@ -154,13 +157,12 @@ const Admin: React.FC = () => {
         if(logged === false){
             const request: AdminRequest = {username: data.username, oldPassword: '', password: data.password, token: ''}
             const response: AdminResponse = await signInAdminRequest(request);
-            
             if(verifyClosedSite(response.message)){
                 if(response.message.id === 1){
                     setLogged(true)
                     setSignInError(false)
                     setToken(response.token);
-                    setUsername(username);
+                    setUsername(data.username);
                 } else {
                     setLogged(false)
                     setSignInError(true)

@@ -13,6 +13,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const theme = createTheme();
 
 export const Login1 = (props: any) => {
+
+    console.log("Login1")
+    // console.log("inflation: ", inflation)
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
