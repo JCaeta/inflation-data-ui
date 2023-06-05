@@ -119,10 +119,11 @@ npm i chartjs-plugin-datalabels
                     },
                     plugins: {
                         datalabels: {
+                            display: props.visibleBarValues,
                             color: "white",
                             font: {
                                 weight: "bold",
-                                size: 20
+                                size: 10
                             }
                         }
                     }
@@ -146,7 +147,8 @@ BarChart.defaultProps = {
     xTitle: "X axis",
     yTitle: "Y axis",
     xFontSize: 20,
-    yFontSize: 20
+    yFontSize: 20,
+    visibleBarValues: false
 };
 BarChart.propTypes = {
     title: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().string),
@@ -156,7 +158,8 @@ BarChart.propTypes = {
     xTitle: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().string),
     xFontSize: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().number),
     yTitle: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().string),
-    yFontSize: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().number)
+    yFontSize: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().number),
+    visibleBarValues: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool)
 }; /**
 console.log("")
 console.log(": ", )
@@ -640,9 +643,16 @@ const ChartSectionDesktop = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.
                 /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_Common_Charts_BarChart_BarChart__WEBPACK_IMPORTED_MODULE_5__/* .BarChart */ .v, {
                     labels: barChartData.labels,
                     data: barChartData.data,
+                    visibleBarValues: false,
                     title: "Cumulative inflation",
-                    xTitle: "Total %",
-                    yTitle: "Period"
+                    xTitle: "Period",
+                    yTitle: "Total %"
+                }),
+                /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("p", {
+                    style: {
+                        color: "grey"
+                    },
+                    children: "Source: INDEC"
                 })
             ]
         });

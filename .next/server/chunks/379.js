@@ -800,6 +800,10 @@ var icons_material_ = __webpack_require__(7915);
 const Table0 = (props)=>{
     return /*#__PURE__*/ jsx_runtime_.jsx(material_.TableContainer, {
         component: material_.Paper,
+        style: {
+            maxHeight: props.maxHeight + "px",
+            overflowY: "auto"
+        },
         children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)(material_.Table, {
             children: [
                 /*#__PURE__*/ jsx_runtime_.jsx(material_.TableHead, {
@@ -853,13 +857,15 @@ Table0.defaultProps = {
     //     ['Bob Smith', 40, 'Male'],
     // ]
     headers: null,
-    rows: null
+    rows: null,
+    maxHeight: 700
 };
 Table0.propTypes = {
     headers: external_prop_types_default().arrayOf((external_prop_types_default()).string).isRequired,
     rows: external_prop_types_default().arrayOf(external_prop_types_default().arrayOf((external_prop_types_default()).node)).isRequired,
     onEdit: (external_prop_types_default()).func,
-    onRemove: (external_prop_types_default()).func
+    onRemove: (external_prop_types_default()).func,
+    maxHeight: (external_prop_types_default()).number
 };
 
 // EXTERNAL MODULE: ./src/components/Common/Inputs/DataInput1/DataInput1.tsx
@@ -1167,7 +1173,8 @@ const DataSectionDesktop = /*#__PURE__*/ (0,external_react_.forwardRef)((props, 
                         headers: tableData.headers,
                         rows: tableData.rows,
                         onEdit: onOpenUpdate,
-                        onRemove: onOpenRemove
+                        onRemove: onOpenRemove,
+                        maxHeight: 800
                     })
                 ]
             })
@@ -1180,21 +1187,6 @@ const DataSectionDesktop = /*#__PURE__*/ (0,external_react_.forwardRef)((props, 
             clearFilter () {
                 filterInputsRef.current.clear();
             },
-            // setTableData(inflationList: any){
-            //     /**
-            //         rows: [
-            //             [1, "2023-05-01", 8.5],
-            //             [2, "2023-06-01", 7.5],
-            //             [3, "2023-07-01", 4.5],
-            //         ]
-            //     */
-            //     const headers =  ["Id", "Date", "Inflation %"]
-            //     const rows = inflationList.map((item) => [
-            //         item.id, item.date.toISOString().split('T')[0], item.value
-            //     ]);
-            //     setTableData({headers: headers, rows: rows})
-            //     setTableVisible(true)
-            // },
             getFilterData () {
                 return filterInputsRef.current.getDates();
             }
@@ -1206,10 +1198,7 @@ const DataSectionDesktop = /*#__PURE__*/ (0,external_react_.forwardRef)((props, 
                 [2, "2023-06-01", 7.5],
                 [3, "2023-07-01", 4.5],
             ]
-        */ console.log("useEffect DataSectionDesktop");
-        console.log("props.inflationList: ", props.inflationList);
-        console.log("  ");
-        if (props.inflationList != null) {
+        */ if (props.inflationList != null) {
             const headers = [
                 "Id",
                 "Date",
@@ -1574,7 +1563,6 @@ const Admin = ()=>{
         console.log("responseInflation: ", responseInflation);
         if (verifyClosedSite(responseInflation.message)) {
             setTableData(responseInflation.inflationList);
-            // inflationAdminRef.current.setTableData(responseInflation.inflationList);
             getChartsData(null, null);
         }
     };
@@ -1629,7 +1617,6 @@ const Admin = ()=>{
         if (verifyClosedSite(response.message)) {
             setToken(response.token);
             setTableData(response.inflationList);
-        // inflationAdminRef.current.setTableData(response.inflationList);
         }
     };
     const deleteInflation = async (inflation)=>{
@@ -1664,12 +1651,6 @@ const Admin = ()=>{
             }
         }
     };
-    // useEffect(() => {
-    //     if(logged){
-    //         onStart()
-    //         setStart(true)
-    //     }
-    // })
     const onFilterChartsSection = async (startDate, endDate)=>{
         getChartsData(startDate, endDate);
     };

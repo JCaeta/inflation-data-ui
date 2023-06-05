@@ -32,9 +32,11 @@ export const ChartSectionDesktop = forwardRef((props: any, ref: any) => {
             <BarChart 
                 labels={barChartData.labels}
                 data = {barChartData.data}
+                visibleBarValues={false}
                 title='Cumulative inflation'
-                xTitle='Total %'
-                yTitle='Period'/>
+                xTitle='Period'
+                yTitle='Total %'/>
+            <p style={{color: 'grey'}}>Source: INDEC</p>
         </>)
     }
     return (<>

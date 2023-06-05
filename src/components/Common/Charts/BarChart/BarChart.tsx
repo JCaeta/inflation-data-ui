@@ -66,12 +66,13 @@ export const BarChart = (props: any) => {
                         }
                     },
                     plugins: {
-                        datalabels: {
-                          color: 'white',
-                          font: {
-                            weight: 'bold',
-                            size: 20
-                          },
+                        datalabels:{
+                            display: props.visibleBarValues,
+                            color: 'white',
+                            font: {
+                                weight: 'bold',
+                                size: 10,
+                            }
                         }
                     }
                 }
@@ -93,6 +94,7 @@ BarChart.defaultProps = {
     yTitle: "Y axis",
     xFontSize: 20,
     yFontSize: 20,
+    visibleBarValues: false
 };
   
 BarChart.propTypes = {
@@ -103,7 +105,8 @@ BarChart.propTypes = {
     xTitle: PropTypes.string,
     xFontSize: PropTypes.number,
     yTitle: PropTypes.string,
-    yFontSize: PropTypes.number
+    yFontSize: PropTypes.number,
+    visibleBarValues: PropTypes.bool
 };
 
 /**

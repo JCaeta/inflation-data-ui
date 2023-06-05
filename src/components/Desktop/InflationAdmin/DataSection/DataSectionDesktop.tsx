@@ -76,7 +76,8 @@ export const DataSectionDesktop = forwardRef((props: any, ref: any) => {
                     headers={tableData.headers} 
                     rows={tableData.rows}
                     onEdit={onOpenUpdate}
-                    onRemove={onOpenRemove}/>
+                    onRemove={onOpenRemove}
+                    maxHeight={800}/>
             </Grid>
         </>);
     }
