@@ -13,7 +13,6 @@ export const InflationAdminDesktop = forwardRef((props: any, ref: any) => {
     const chartSectionRef = useRef(null);
     const adminSectionRef = useRef(null);
     const [chartsData, setChartsData] = useState(null)
-    const [tableData, setTableData] = useState(null)
     
     const onTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setSelectedTab(newValue);
@@ -27,10 +26,6 @@ export const InflationAdminDesktop = forwardRef((props: any, ref: any) => {
 
         clearFilterDataSection() {
             dataSectionRef.current.clearFilter()
-        },
-
-        setTableData(inflationList: any){
-            setTableData(inflationList)
         },
 
         getFilterDataSection(){
@@ -58,15 +53,6 @@ export const InflationAdminDesktop = forwardRef((props: any, ref: any) => {
         }
     }))
 
-    useEffect(() => {
-        // Set table data
-        if(selectedTab === 0) { // Data section
-            if(tableData != null){
-                dataSectionRef.current.setTableData(tableData)
-            }
-        }
-    }, [tableData, selectedTab])
-
     return (<>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Tabs value={selectedTab} onChange={onTabChange} aria-label="simple tabs example">
@@ -84,7 +70,8 @@ export const InflationAdminDesktop = forwardRef((props: any, ref: any) => {
                 onAdd={props.onCreateInflation}
                 onFilter={props.onFilterDataSection}
                 onUpdate={props.onUpdateInflation}
-                onRemove={props.onDeleteInflation}/>
+                onRemove={props.onDeleteInflation}
+                inflationList={props.tableData}/>
         )}
         {selectedTab === 1 && (
             <ChartSectionDesktop
@@ -123,7 +110,8 @@ InflationAdminDesktop.defaultProps =
     errorChangeUsername: false,
     errorChangePassword: false,
     errorChangeUsernameBadPassword: false,
-    onLogout: function(){}
+    onLogout: function(){},
+    tableData: null
 }
 
 InflationAdminDesktop.propTypes = 
@@ -144,6 +132,7 @@ InflationAdminDesktop.propTypes =
     errorChangePassword: PropTypes.bool,
     errorChangeUsernameBadPassword: PropTypes.bool,
     onLogout: PropTypes.func,
+    tableData: PropTypes.any
 }
 
 /**

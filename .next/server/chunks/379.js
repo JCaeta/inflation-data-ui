@@ -1180,33 +1180,55 @@ const DataSectionDesktop = /*#__PURE__*/ (0,external_react_.forwardRef)((props, 
             clearFilter () {
                 filterInputsRef.current.clear();
             },
-            setTableData (inflationList) {
-                /**
-                rows: [
-                    [1, "2023-05-01", 8.5],
-                    [2, "2023-06-01", 7.5],
-                    [3, "2023-07-01", 4.5],
-                ]
-            */ const headers = [
-                    "Id",
-                    "Date",
-                    "Inflation %"
-                ];
-                const rows = inflationList.map((item)=>[
-                        item.id,
-                        item.date.toISOString().split("T")[0],
-                        item.value
-                    ]);
-                setTableData({
-                    headers: headers,
-                    rows: rows
-                });
-                setTableVisible(true);
-            },
+            // setTableData(inflationList: any){
+            //     /**
+            //         rows: [
+            //             [1, "2023-05-01", 8.5],
+            //             [2, "2023-06-01", 7.5],
+            //             [3, "2023-07-01", 4.5],
+            //         ]
+            //     */
+            //     const headers =  ["Id", "Date", "Inflation %"]
+            //     const rows = inflationList.map((item) => [
+            //         item.id, item.date.toISOString().split('T')[0], item.value
+            //     ]);
+            //     setTableData({headers: headers, rows: rows})
+            //     setTableVisible(true)
+            // },
             getFilterData () {
                 return filterInputsRef.current.getDates();
             }
         }));
+    (0,external_react_.useEffect)(()=>{
+        /**
+            rows: [
+                [1, "2023-05-01", 8.5],
+                [2, "2023-06-01", 7.5],
+                [3, "2023-07-01", 4.5],
+            ]
+        */ console.log("useEffect DataSectionDesktop");
+        console.log("props.inflationList: ", props.inflationList);
+        console.log("  ");
+        if (props.inflationList != null) {
+            const headers = [
+                "Id",
+                "Date",
+                "Inflation %"
+            ];
+            const rows = props.inflationList.map((item)=>[
+                    item.id,
+                    item.date.toISOString().split("T")[0],
+                    item.value
+                ]);
+            setTableData({
+                headers: headers,
+                rows: rows
+            });
+            setTableVisible(true);
+        }
+    }, [
+        props.inflationList
+    ]);
     return /*#__PURE__*/ jsx_runtime_.jsx(jsx_runtime_.Fragment, {
         children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)(material_.Container, {
             children: [
@@ -1272,14 +1294,16 @@ DataSectionDesktop.defaultProps = {
     onFilter: null,
     onAdd: null,
     onUpdate: null,
-    onRemove: null
+    onRemove: null,
+    inflationList: null
 };
 DataSectionDesktop.propTypes = {
     title: (external_prop_types_default()).string,
     onFilter: (external_prop_types_default()).func,
     onAdd: (external_prop_types_default()).func,
     onUpdate: (external_prop_types_default()).func,
-    onRemove: (external_prop_types_default()).func
+    onRemove: (external_prop_types_default()).func,
+    inflationList: (external_prop_types_default()).any
 } /**
 const onAdd = (inputNumber: number, inputDate: Date) =>{
     //...
@@ -1336,7 +1360,6 @@ const InflationAdminDesktop = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1_
     const chartSectionRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
     const adminSectionRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
     const [chartsData, setChartsData] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
-    const [tableData, setTableData] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
     const onTabChange = (event, newValue)=>{
         setSelectedTab(newValue);
         props.onTabChange(newValue);
@@ -1347,9 +1370,6 @@ const InflationAdminDesktop = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1_
             },
             clearFilterDataSection () {
                 dataSectionRef.current.clearFilter();
-            },
-            setTableData (inflationList) {
-                setTableData(inflationList);
             },
             getFilterDataSection () {
                 if (selectedTab === 0) {
@@ -1372,17 +1392,6 @@ const InflationAdminDesktop = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1_
                 adminSectionRef.current.goBackToMain();
             }
         }));
-    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
-        // Set table data
-        if (selectedTab === 0) {
-            if (tableData != null) {
-                dataSectionRef.current.setTableData(tableData);
-            }
-        }
-    }, [
-        tableData,
-        selectedTab
-    ]);
     return /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
         children: [
             /*#__PURE__*/ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_mui_material__WEBPACK_IMPORTED_MODULE_3__.Box, {
@@ -1421,7 +1430,8 @@ const InflationAdminDesktop = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1_
                 onAdd: props.onCreateInflation,
                 onFilter: props.onFilterDataSection,
                 onUpdate: props.onUpdateInflation,
-                onRemove: props.onDeleteInflation
+                onRemove: props.onDeleteInflation,
+                inflationList: props.tableData
             }),
             selectedTab === 1 && /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_ChartSection_ChartSectionDesktop__WEBPACK_IMPORTED_MODULE_5__/* .ChartSectionDesktop */ .t, {
                 ref: chartSectionRef,
@@ -1457,7 +1467,8 @@ InflationAdminDesktop.defaultProps = {
     errorChangeUsername: false,
     errorChangePassword: false,
     errorChangeUsernameBadPassword: false,
-    onLogout: function() {}
+    onLogout: function() {},
+    tableData: null
 };
 InflationAdminDesktop.propTypes = {
     title: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().string),
@@ -1475,7 +1486,8 @@ InflationAdminDesktop.propTypes = {
     errorChangeUsername: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
     errorChangePassword: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
     errorChangeUsernameBadPassword: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
-    onLogout: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func)
+    onLogout: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+    tableData: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().any)
 } /**
 console.log("")
 console.log(":", )
@@ -1530,6 +1542,7 @@ const Admin = ()=>{
     const [errorChangeUsernameBadPassword, setErrorChangeUsernameBadPassword] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
     const [signInError, setSignInError] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
     const [username, setUsername] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)("");
+    const [tableData, setTableData] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(null);
     const router = (0,next_router__WEBPACK_IMPORTED_MODULE_5__.useRouter)();
     const [closeSite, setCloseSite] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
     const verifyClosedSite = (message)=>{
@@ -1541,13 +1554,15 @@ const Admin = ()=>{
         }
     };
     (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(()=>{
-        if (logged) {
+        if (logged && start === false) {
             onStart();
+            setStart(true);
         }
     }, [
         logged
     ]);
     const onStart = async ()=>{
+        console.log("onStart");
         // Get inflation data
         const requestInflation = {
             startDate: null,
@@ -1556,8 +1571,10 @@ const Admin = ()=>{
             token: null
         };
         const responseInflation = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_3__/* .readInflationRequest */ .Qr)(requestInflation);
+        console.log("responseInflation: ", responseInflation);
         if (verifyClosedSite(responseInflation.message)) {
-            inflationAdminRef.current.setTableData(responseInflation.inflationList);
+            setTableData(responseInflation.inflationList);
+            // inflationAdminRef.current.setTableData(responseInflation.inflationList);
             getChartsData(null, null);
         }
     };
@@ -1595,21 +1612,24 @@ const Admin = ()=>{
         }
     };
     const refreshData = async ()=>{
-        // const dates = inflationAdminRef.current.getFilterData()
         const dates = inflationAdminRef.current.getFilterDataSection();
         await readInflation(dates.date1, dates.date2);
     };
     const readInflation = async (startDate, endDate)=>{
+        console.log("readInflation");
         const request = {
             startDate: startDate,
             endDate: endDate,
             inflation: null,
             token: token
         };
+        console.log("request: ", request);
         const response = await (0,_api_http_requests__WEBPACK_IMPORTED_MODULE_3__/* .readInflationRequest */ .Qr)(request);
+        console.log("response: ", response);
         if (verifyClosedSite(response.message)) {
             setToken(response.token);
-            inflationAdminRef.current.setTableData(response.inflationList);
+            setTableData(response.inflationList);
+        // inflationAdminRef.current.setTableData(response.inflationList);
         }
     };
     const deleteInflation = async (inflation)=>{
@@ -1644,12 +1664,12 @@ const Admin = ()=>{
             }
         }
     };
-    (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(()=>{
-        if (logged) {
-            onStart();
-            setStart(true);
-        }
-    });
+    // useEffect(() => {
+    //     if(logged){
+    //         onStart()
+    //         setStart(true)
+    //     }
+    // })
     const onFilterChartsSection = async (startDate, endDate)=>{
         getChartsData(startDate, endDate);
     };
@@ -1725,6 +1745,7 @@ const Admin = ()=>{
     const onLogout = ()=>{
         setToken("");
         setLogged(false);
+        setStart(false);
         router.replace("/");
     };
     return /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
@@ -1741,6 +1762,7 @@ const Admin = ()=>{
             errorChangeUsername: errorChangeUsername,
             errorChangePassword: errorChangePassword,
             username: username,
+            tableData: tableData,
             errorChangeUsernameBadPassword: errorChangeUsernameBadPassword,
             onLogout: onLogout
         }) : /*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(_components_Common_Login1_Login1__WEBPACK_IMPORTED_MODULE_4__/* .Login1 */ .O, {

@@ -22,6 +22,7 @@ const Admin: React.FC = () => {
     const [errorChangeUsernameBadPassword, setErrorChangeUsernameBadPassword] = useState(false);
     const [signInError, setSignInError] = useState(false);
     const [username, setUsername] = useState('');
+    const [tableData, setTableData] = useState(null);
     const router = useRouter();
     const [closeSite, setCloseSite] = useState(false);
 
@@ -35,12 +36,15 @@ const Admin: React.FC = () => {
     }
 
     useEffect(() => {
-        if(logged){
+        if(logged && start === false){
             onStart()
+            setStart(true)
         }
     }, [logged])
 
     const onStart = async () => {
+        console.log("onStart")
+        
         // Get inflation data
         const requestInflation: InflationRequest = 
         {
@@ -50,8 +54,10 @@ const Admin: React.FC = () => {
             token: null
         }
         const responseInflation: InflationResponse = await readInflationRequest(requestInflation)
+        console.log("responseInflation: ", responseInflation)
+
         if(verifyClosedSite(responseInflation.message)){
-            inflationAdminRef.current.setTableData(responseInflation.inflationList);
+            setTableData(responseInflation.inflationList)
             getChartsData(null, null)
         }
     }
@@ -89,22 +95,27 @@ const Admin: React.FC = () => {
     }
 
     const refreshData = async () => {
-        // const dates = inflationAdminRef.current.getFilterData()
         const dates = inflationAdminRef.current.getFilterDataSection()
         await readInflation(dates.date1, dates.date2)
     }
     
     const readInflation = async (startDate: Date, endDate: Date) => {
+        console.log("readInflation")
         const request: InflationRequest = {
             startDate: startDate,
             endDate: endDate,
             inflation: null,
             token: token
         }
+
+        console.log("request: ", request)  
         const response: InflationResponse = await readInflationRequest(request);
+        
+        console.log("response: ", response)  
+        
         if(verifyClosedSite(response.message)){
             setToken(response.token)
-            inflationAdminRef.current.setTableData(response.inflationList);
+            setTableData(response.inflationList);
         }
     }
 
@@ -141,13 +152,6 @@ const Admin: React.FC = () => {
             }
         }
     }
-
-    useEffect(() => {
-        if(logged){
-            onStart()
-            setStart(true)
-        }
-    })
 
     const onFilterChartsSection = async (startDate: Date, endDate: Date) => {
         getChartsData(startDate, endDate);
@@ -213,6 +217,7 @@ const Admin: React.FC = () => {
     const onLogout = () => {
         setToken('')
         setLogged(false);
+        setStart(false)
         router.replace('/');
     }
 
@@ -232,6 +237,7 @@ const Admin: React.FC = () => {
                     errorChangeUsername={errorChangeUsername}
                     errorChangePassword={errorChangePassword}
                     username={username}
+                    tableData={tableData}
                     errorChangeUsernameBadPassword={errorChangeUsernameBadPassword}
                     onLogout={onLogout}/>
             : <Login1 

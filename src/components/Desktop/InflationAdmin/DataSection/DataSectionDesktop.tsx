@@ -1,5 +1,5 @@
 import styles from './DataSectionDesktop.module.scss';
-import React, {useState, forwardRef, useImperativeHandle, useRef} from 'react';
+import React, {useState, forwardRef, useImperativeHandle, useRef, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { DataInput0 } from '../../../Common/Inputs/DataInput0/DataInput0';
 import { Table0 } from '../../../Common/Table0/Table0';
@@ -90,28 +90,32 @@ export const DataSectionDesktop = forwardRef((props: any, ref: any) => {
             filterInputsRef.current.clear()
         },
 
-        setTableData(inflationList: any){
-            /**
-                rows: [
-                    [1, "2023-05-01", 8.5],
-                    [2, "2023-06-01", 7.5],
-                    [3, "2023-07-01", 4.5],
-                ]
-            */
+        getFilterData(){
+            return filterInputsRef.current.getDates()
+        }
+    }))
 
+    useEffect(() => {
+        /**
+            rows: [
+                [1, "2023-05-01", 8.5],
+                [2, "2023-06-01", 7.5],
+                [3, "2023-07-01", 4.5],
+            ]
+        */
+
+        if(props.inflationList != null) {
             const headers =  ["Id", "Date", "Inflation %"]
-            const rows = inflationList.map((item) => [
+            const rows = props.inflationList.map((item) => [
                 item.id, item.date.toISOString().split('T')[0], item.value
             ]);
 
             setTableData({headers: headers, rows: rows})
             setTableVisible(true)
-        },
-
-        getFilterData(){
-            return filterInputsRef.current.getDates()
         }
-    }))
+
+    }, [props.inflationList])
+
 
     return (<>
         <Container>
@@ -158,7 +162,8 @@ DataSectionDesktop.defaultProps =
     onFilter: null,
     onAdd: null,
     onUpdate: null,
-    onRemove: null
+    onRemove: null,
+    inflationList: null
 }
 
 DataSectionDesktop.propTypes = 
@@ -167,7 +172,8 @@ DataSectionDesktop.propTypes =
     onFilter: PropTypes.func,
     onAdd: PropTypes.func,
     onUpdate: PropTypes.func,
-    onRemove: PropTypes.func
+    onRemove: PropTypes.func,
+    inflationList: PropTypes.any
 }
 
 /**
