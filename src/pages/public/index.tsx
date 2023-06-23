@@ -23,6 +23,7 @@ export const Public = () => {
     }
 
     const onStart = async () => {
+        
         getChartsData(null, null)
     }
 
